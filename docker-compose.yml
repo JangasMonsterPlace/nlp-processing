@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  nlp-processing:
+    build: .
+    container_name: nlp-processing
+    volumes:
+      - ./app:/app
