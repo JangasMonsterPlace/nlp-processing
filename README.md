@@ -1,5 +1,5 @@
-# Job Runner
-This is an application for sending and processing jobs.
+# NLP Processing
+This is an application for Processing text data and get insights from it.
 
 ## Requirements
 - Python 3.8 or higher
