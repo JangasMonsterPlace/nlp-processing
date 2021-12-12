@@ -1,7 +1,9 @@
 import logging
 import nltk
 import sys
+import json
 
+from kafka import consumer
 from orm import ORM
 from ngram import ngram_runner
 from tokenizer import get_tokens
@@ -22,10 +24,27 @@ logger.addHandler(sh)
 
 
 def main():
-    entities = list(ORM.fetch_texts())
-    tokens = get_tokens(entities)
-    lda_runner(entities, tokens, 1)
-    ngram_runner(tokens)
+    consumer.subscribe(["jobs-nlp"])
+    while True:
+        try:
+            msg = consumer.poll(timeout=1)
+            if msg is None:
+                logger.info("No Message Received. Wait for polling.")
+                continue
+            elif msg.error():
+                logger.error(msg.error())
+            else:
+                logger.info("msg received")
+                msg = json.loads(msg.value().decode())
+                if not isinstance(msg["info"], dict):
+                    msg["info"] = json.loads(msg["info"])
+                job_id = msg["id"]
+                entities = list(ORM.fetch_texts())
+                tokens = get_tokens(entities)
+                lda_runner(entities, tokens, job_id)
+                ngram_runner(tokens, job_id)
+        except Exception as e:
+            logger.error(str(e))
 
 
 if __name__ == "__main__":
