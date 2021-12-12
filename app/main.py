@@ -5,6 +5,7 @@ import sys
 from orm import ORM
 from ngram import ngram_runner
 from tokenizer import get_tokens
+from lda import lda_runner
 
 
 nltk.download('wordnet')
@@ -23,6 +24,7 @@ logger.addHandler(sh)
 def main():
     entities = list(ORM.fetch_texts())
     tokens = get_tokens(entities)
+    lda_runner(entities, tokens, 1)
     ngram_runner(tokens)
 
 

@@ -16,6 +16,13 @@ class NGram:
     job_id: int
 
 
+@dataclass
+class LDA:
+    topic_id: int
+    text: str
+    job_id: int
+
+
 class ORM:
     @classmethod
     def fetch_texts(cls) -> List[str]:
@@ -29,3 +36,8 @@ class ORM:
     def insert_ngrams(cls, ngrams: List[NGram]):
         sql = f"INSERT INTO ngram ({','.join(NGram.__annotations__.keys())}) VALUES %s"
         execute_values(_db.cur, sql, [tuple(ngram.__dict__.values()) for ngram in ngrams])
+
+    @classmethod
+    def insert_lda(cls, lda: List[LDA]):
+        sql = f"INSERT INTO ldas ({','.join(LDA.__annotations__.keys())}) VALUES %s"
+        execute_values(_db.cur, sql, [tuple(e.__dict__.values()) for e in lda])

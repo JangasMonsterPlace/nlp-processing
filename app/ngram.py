@@ -101,11 +101,11 @@ def get_3_gram_df(tokens: List[str], job_id: int) -> List[NGram]:
     ]
 
 
-def ngram_runner(tokens):
+def ngram_runner(tokens: List[List[str]], job_id: int):
     logger.info("Start Process")
     # flatten_list
     tokens = list(functools.reduce(operator.concat, tokens))
-    bigrams = get_2_gram_df(tokens, 1)
-    trigrams = get_3_gram_df(tokens, 1)
+    bigrams = get_2_gram_df(tokens, job_id)
+    trigrams = get_3_gram_df(tokens, job_id)
     ORM.insert_ngrams(bigrams)
     ORM.insert_ngrams(trigrams)
