@@ -4,5 +4,7 @@ services:
   nlp-processing:
     build: .
     container_name: nlp-processing
+    env_file:
+      - ./app/.env
     volumes:
       - ./app:/app
