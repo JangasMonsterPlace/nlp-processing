@@ -33,9 +33,9 @@ class ORM:
             yield entity[0]
 
     @classmethod
-    def delete_ngrams(cls, job_id: int):
-        sql = "DELETE FROM ngram WHERE job_id=%s"
-        _db.cur.execute(sql, (job_id, ))
+    def delete_ngrams(cls, job_id: int, dimension: int):
+        sql = "DELETE FROM ngram WHERE job_id=%s AND dimension=%s"
+        _db.cur.execute(sql, (job_id, dimension, ))
 
     @classmethod
     def delete_ldas(cls, job_id: int):
@@ -44,7 +44,7 @@ class ORM:
 
     @classmethod
     def insert_ngrams(cls, ngrams: List[NGram]):
-        cls.delete_ngrams(ngrams[0].job_id)
+        cls.delete_ngrams(ngrams[0].job_id, ngrams[0].dimension)
         sql = f"INSERT INTO ngram ({','.join(NGram.__annotations__.keys())}) VALUES %s"
         execute_values(_db.cur, sql, [tuple(ngram.__dict__.values()) for ngram in ngrams])
 
