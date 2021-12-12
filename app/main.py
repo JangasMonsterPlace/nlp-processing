@@ -1,10 +1,16 @@
 import logging
+import nltk
 import sys
 
-from dotenv import load_dotenv
+from orm import ORM
+from ngram import ngram_runner
+from tokenizer import get_tokens
 
-load_dotenv()
 
+nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -15,7 +21,9 @@ logger.addHandler(sh)
 
 
 def main():
-    logger.info("Start Process")
+    entities = list(ORM.fetch_texts())
+    tokens = get_tokens(entities)
+    ngram_runner(tokens)
 
 
 if __name__ == "__main__":
