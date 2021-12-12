@@ -40,8 +40,10 @@ def main():
                 msg = json.loads(msg.value().decode())
                 if not isinstance(msg["info"], dict):
                     msg["info"] = json.loads(msg["info"])
+                logger.info(f"Received msg with info {str(msg['info'])}")
                 job_id = msg["id"]
-                entities = list(ORM.fetch_texts())
+                entities = list(ORM.fetch_texts(**msg["info"]))
+                logger.info(f"fetched entity count for job; {len(entities)}")
                 tokens = get_tokens(entities)
                 lda_runner(entities, tokens, job_id)
                 ngram_runner(tokens, job_id)

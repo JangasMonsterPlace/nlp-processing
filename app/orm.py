@@ -25,10 +25,15 @@ class LDA:
 
 class ORM:
     @classmethod
-    def fetch_texts(cls) -> List[str]:
-        logger.info("Start Fetching Tweets from Postgres By Author")
-        sql = "SELECT text FROM texts"
-        _db_source.cur.execute(sql)
+    def fetch_texts(cls, from_date: str, to_date: str, source_type: str, *args, **kwargs) -> List[str]:
+        # {"from_date": "2021-12-10", "to_date": "2021-12-18", "source_type": "own", "sentiment": "all"}
+        logger.info("Start Fetching Tweets from Postgres")
+        if source_type == "own":
+            sql = "SELECT text FROM texts WHERE written_by_user_at>=%s AND written_by_user_at<%s AND source=%s"
+            _db_source.cur.execute(sql, (from_date, to_date, "csv", ))
+        else:
+            sql = "SELECT text FROM texts WHERE written_by_user_at>=%s AND written_by_user_at<%s"
+            _db_source.cur.execute(sql, (from_date, to_date, ))
         for entity in _db_source.cur.fetchall():
             yield entity[0]
 
