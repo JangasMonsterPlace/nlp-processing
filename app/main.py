@@ -21,6 +21,8 @@ fmt = logging.Formatter("%(asctime)s %(levelname)-8s %(name)-30s %(message)s")
 sh = logging.StreamHandler(sys.stderr)
 sh.setFormatter(fmt)
 logger.addHandler(sh)
+file_logger = logging.FileHandler("app.log")
+logger.addHandler(file_logger)
 
 
 def main():
